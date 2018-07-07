@@ -1,7 +1,10 @@
 package com.example.aditi.todo_list;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,12 +26,13 @@ public class Edit_Activity extends AppCompatActivity {
     Bundle b;
     String title,date,description,time,category;
     int year,month,day,hour,minute;
-    public static final String TITLE ="title";
+   /* public static final String TITLE ="title";
     public static final String DESCRIPTION ="description";
     public static final String DATE = "date";
     public static final String TIME = "time";
+    public static final  String CATEGORY="CATEGORY";*/
     public static final String ID="id";
-    public static final  String CATEGORY="CATEGORY";
+
     long id;
 
     @Override
@@ -76,19 +80,20 @@ public class Edit_Activity extends AppCompatActivity {
         String date = t1.getText().toString();
         String time = t2.getText().toString();
 
-        Bundle b2 = new Bundle();
-        b2.putString(this.TITLE,title);
-        b2.putString(this.DESCRIPTION,description);
-        b2.putString(this.DATE,date);
-        b2.putString(this.TIME,time);
-        b2.putLong(this.ID,id);
-        b2.putString(this.CATEGORY,category);
 
-        // send the new edited bundle of data
-        Intent intent = new Intent();
-        intent.putExtras(b2);
-        setResult(MainActivity.EDIT_RESULT_CODE,intent);
-        finish();
+        update(title, description, date, time, category); //add to database
+        if(b.getInt("Request_Code")==MainActivity.EDIT_REQUEST_CODE){
+            // send the new edited bundle of data
+            Intent intent = new Intent();
+            setResult(MainActivity.EDIT_RESULT_CODE,intent);
+            finish();
+        }
+        else {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
+
 
     }
 
@@ -140,6 +145,56 @@ public class Edit_Activity extends AppCompatActivity {
                 }, hour, minute, false);
         timePickerDialog.show();
     }
+
+    //update in DB
+    public void update(String title, String desc, String date, String time, String category) {
+        Items item = new Items(title,desc,date,time,category);
+
+        ItemOpenHelper openHelper1 = ItemOpenHelper.getInstance(getApplicationContext());
+        SQLiteDatabase database1=  openHelper1.getWritableDatabase();
+        ContentValues contentValues =new ContentValues();
+
+        contentValues.put(Contract.Item.COL_TITLE, item.getTitle());
+        contentValues.put(Contract.Item.COL_DESC, item.getDescription());
+        contentValues.put(Contract.Item.COL_DATE, item.getDate());
+        contentValues.put(Contract.Item.COL_TIME, item.getTime());
+        contentValues.put(Contract.Item.COL_CATEGORY, item.getCategory());
+
+        String[] selectionArgs = {id + ""};
+        database1.update(Contract.Item.TABLE_NAME,contentValues,Contract.Item.COL_ID + " = ?",selectionArgs);
+
+
+
+        Bundle b2 = new Bundle();
+        b2.putLong(ID,id);
+        //Set alarm for that date and time
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent1 = new Intent(this,AlarmReceiver.class);
+        intent1.putExtras(b2);
+        PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)id,intent1,0);
+        setAlarm(item.getDate(),item.getTime(),alarmManager,pendingIntent);
+
+    }
+
+    public void setAlarm(String d,String t, AlarmManager manager,PendingIntent pendingIntent){
+
+
+        String[] splitString1 = d.split("-");
+        int year = Integer.parseInt(splitString1[2]);
+        int month = Integer.parseInt(splitString1[1]);
+        int day = Integer.parseInt(splitString1[0]);
+
+        String[] splitString2 = t.split(":");
+        int hour = Integer.parseInt(splitString2[0]);
+        int minute = Integer.parseInt(splitString2[1]);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year,month-1,day,hour,minute-1);
+
+        long alarm_time = calendar.getTimeInMillis();
+        manager.set(AlarmManager.RTC_WAKEUP,alarm_time,pendingIntent);
+
+    }
+
 
 
 }

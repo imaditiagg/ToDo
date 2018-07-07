@@ -40,7 +40,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 while (cursor.moveToNext()) {
                     title = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TITLE));
-                    //description = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DESC));
                 }
 
                 NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -57,20 +56,25 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 builder.setContentTitle("REMINDER");
                 builder.setContentText(title);
-                builder.setSmallIcon(R.drawable.ic_launcher_foreground);
+                builder.setSmallIcon(R.drawable.todo);
 
-                builder.setGroup(GROUP_KEY);
+                builder.setGroup(GROUP_KEY); //Group notifications
                 builder.setAutoCancel(true); //remove the notification when user taps it
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(title));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(title)); //Expandable notification
 
-                builder.setPriority(Notification.PRIORITY_MAX);
+                builder.setPriority(Notification.PRIORITY_MAX); //Heads up notification
                 if (Build.VERSION.SDK_INT >= 21) builder.setVibrate(new long[]{250, 250, 250, 250});
 
 
                 Intent intent2 = new Intent(context,ItemDescription.class);
                 intent2.putExtras(bundle);
                 PendingIntent pendingIntent2 = PendingIntent.getActivity(context, (int)id ,intent2,0);
-                builder.setContentIntent(pendingIntent2);
+                builder.setContentIntent(pendingIntent2); //setNotification click intent
+
+                Intent intent3 = new Intent(context,Edit_Activity.class);
+                intent3.putExtras(bundle);
+                PendingIntent pendingIntent3 = PendingIntent.getActivity(context, (int)id ,intent3,PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.addAction(R.drawable.todo,"Edit",pendingIntent3); //add action
 
                 Notification notification = builder.build();
                 manager.notify(1,notification);

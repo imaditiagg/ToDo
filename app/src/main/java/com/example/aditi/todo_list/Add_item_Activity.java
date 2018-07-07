@@ -200,7 +200,7 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
         Intent intent1 = new Intent(this,AlarmReceiver.class);
         intent1.putExtras(b2);
         PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)id,intent1,0);
-        setAlarm(date,time,alarmManager,pendingIntent);
+        setAlarm(item.getDate(),item.getTime(),alarmManager,pendingIntent);
 
     }
 

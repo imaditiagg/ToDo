@@ -99,46 +99,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onActivityResult(requestCode, resultCode, data);
 
         //edit item
-        if(requestCode==EDIT_REQUEST_CODE && resultCode==EDIT_RESULT_CODE){
-
-            Bundle b = data.getExtras();
-
-            String new_title = b.getString(Edit_Activity.TITLE);
-            String new_description = b.getString(Edit_Activity.DESCRIPTION);
-            String new_date = b.getString(Edit_Activity.DATE);
-            String new_time =b.getString(Edit_Activity.TIME);
-            String old_cat =b.getString(Edit_Activity.CATEGORY);
-            long  old_id= b.getLong(Edit_Activity.ID);
-
-            Items new_item = new Items(new_title,new_description,new_date,new_time,old_cat);
-            new_item.setId(old_id);
-
-            ItemOpenHelper openHelper1 = ItemOpenHelper.getInstance(getApplicationContext());
-            SQLiteDatabase database1=  openHelper1.getWritableDatabase();
-            ContentValues contentValues =new ContentValues();
-
-            contentValues.put(Contract.Item.COL_TITLE,new_title);
-            contentValues.put(Contract.Item.COL_DESC,new_description);
-            contentValues.put(Contract.Item.COL_DATE,new_date);
-            contentValues.put(Contract.Item.COL_TIME,new_time);
-
-            String[] selectionArgs = {old_id + ""};
-            database1.update(Contract.Item.TABLE_NAME,contentValues,Contract.Item.COL_ID + " = ?",selectionArgs);
+        if(requestCode==EDIT_REQUEST_CODE && resultCode==EDIT_RESULT_CODE) {
             displayall();
 
-            //Edit alarm as well
-            Bundle bundle = new Bundle();
-            bundle.putLong(ID,old_id);
-
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            Intent my_intent = new Intent(this,AlarmReceiver.class);
-            my_intent.putExtras(bundle);
-            PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)old_id,my_intent,0);
-            alarmManager.cancel(pendingIntent);
-            pendingIntent =  PendingIntent.getBroadcast(this,(int)old_id,my_intent,0);
-            setAlarm(new_date,new_time,alarmManager,pendingIntent); //call set alarm method
-            }
-
+        }
             //delete from item_description activity
             else if(resultCode==ItemDescription.DELETE_RESULT_CODE){
             displayall();
@@ -230,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Items it = items.get(i); //get the clicked item
         Bundle bundle = new Bundle();
         bundle.putLong(ID,it.getId());
+        bundle.putInt("Request_code",MainActivity.EDIT_REQUEST_CODE);
 
         intent.putExtras(bundle); //pass the bundle to ItemDescription Activity
         startActivityForResult(intent,EDIT_REQUEST_CODE);
@@ -377,25 +342,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         cursor.close();
     }
 
-
-    public void setAlarm(String d,String t, AlarmManager manager,PendingIntent pendingIntent){
-
-
-        String[] splitString1 = d.split("-");
-        int year = Integer.parseInt(splitString1[2]);
-        int month = Integer.parseInt(splitString1[1]);
-        int day = Integer.parseInt(splitString1[0]);
-
-        String[] splitString2 = t.split(":");
-        int hour = Integer.parseInt(splitString2[0]);
-        int minute = Integer.parseInt(splitString2[1]);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year,month-1,day,hour,minute-1);
-
-        long alarm_time = calendar.getTimeInMillis();
-        manager.set(AlarmManager.RTC_WAKEUP,alarm_time,pendingIntent);
-
-    }
 
 
 }
