@@ -26,11 +26,7 @@ public class Edit_Activity extends AppCompatActivity {
     Bundle b;
     String title,date,description,time,category;
     int year,month,day,hour,minute;
-   /* public static final String TITLE ="title";
-    public static final String DESCRIPTION ="description";
-    public static final String DATE = "date";
-    public static final String TIME = "time";
-    public static final  String CATEGORY="CATEGORY";*/
+
     public static final String ID="id";
 
     long id;
@@ -39,7 +35,7 @@ public class Edit_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
 
         e1= findViewById(R.id.titleEdittext);
@@ -75,13 +71,13 @@ public class Edit_Activity extends AppCompatActivity {
 
     public void saveEditItem(View view){
 
-        String title = e1.getText().toString();
-        String description = e2.getText().toString();
-        String date = t1.getText().toString();
-        String time = t2.getText().toString();
+        String title1 = e1.getText().toString();
+        String description1 = e2.getText().toString();
+        String date1 = t1.getText().toString();
+        String time1 = t2.getText().toString();
 
 
-        update(title, description, date, time, category); //add to database
+        update(title1, description1, date1, time1, category); //add to database
         if(b.getInt("Request_Code")==MainActivity.EDIT_REQUEST_CODE){
             // send the new edited bundle of data
             Intent intent = new Intent();
@@ -147,8 +143,8 @@ public class Edit_Activity extends AppCompatActivity {
     }
 
     //update in DB
-    public void update(String title, String desc, String date, String time, String category) {
-        Items item = new Items(title,desc,date,time,category);
+    public void update(String title1, String desc1, String date1, String time1, String category1) {
+        Items item = new Items(title1,desc1,date1,time1,category1);
 
         ItemOpenHelper openHelper1 = ItemOpenHelper.getInstance(getApplicationContext());
         SQLiteDatabase database1=  openHelper1.getWritableDatabase();
@@ -163,16 +159,23 @@ public class Edit_Activity extends AppCompatActivity {
         String[] selectionArgs = {id + ""};
         database1.update(Contract.Item.TABLE_NAME,contentValues,Contract.Item.COL_ID + " = ?",selectionArgs);
 
+        //if date or time has changed,set the alarm again
+        if(!item.getDate().equals(date)  || !item.getTime().equals(time)) {
+            Bundle b2 = new Bundle();
+            b2.putLong(ID, id);
 
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent1 = new Intent(this, AlarmReceiver.class);
+            intent1.putExtras(b2);
+            PendingIntent pendingIntent1 = PendingIntent.getBroadcast(this, (int) id, intent1, 0);
+            alarmManager.cancel(pendingIntent1);//cancel already set alarm
 
-        Bundle b2 = new Bundle();
-        b2.putLong(ID,id);
-        //Set alarm for that date and time
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent intent1 = new Intent(this,AlarmReceiver.class);
-        intent1.putExtras(b2);
-        PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)id,intent1,0);
-        setAlarm(item.getDate(),item.getTime(),alarmManager,pendingIntent);
+            Intent intent2 = new Intent(this, AlarmReceiver.class);
+            intent2.putExtras(b2);
+            PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, (int) id, intent2, 0);
+            //set new alarm
+            setAlarm(item.getDate(), item.getTime(), alarmManager, pendingIntent2);
+        }
 
     }
 
@@ -185,6 +188,7 @@ public class Edit_Activity extends AppCompatActivity {
         int day = Integer.parseInt(splitString1[0]);
 
         String[] splitString2 = t.split(":");
+
         int hour = Integer.parseInt(splitString2[0]);
         int minute = Integer.parseInt(splitString2[1]);
         Calendar calendar = Calendar.getInstance();
