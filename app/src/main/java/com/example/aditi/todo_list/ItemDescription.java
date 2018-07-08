@@ -100,7 +100,16 @@ public class ItemDescription extends AppCompatActivity {
                     ItemOpenHelper openHelper = ItemOpenHelper.getInstance(getApplicationContext());
                     SQLiteDatabase database = openHelper.getWritableDatabase();
                     String[] selectionArgs = {id + ""};
-                    Log.i("id in description",id+"");
+                    Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,Contract.Item.COL_ID + " = ? "
+                            ,selectionArgs,null,null,null);
+                    while (cursor.moveToNext()) {
+                        MainActivity.deleted_title = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TITLE));
+                        MainActivity.deleted_desc = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DESC));
+                        MainActivity.deleted_date = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DATE));
+                        MainActivity.deleted_time = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
+                        MainActivity.deleted_cat = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
+                    }
+
                     database.delete(Contract.Item.TABLE_NAME,Contract.Item.COL_ID + " = ?",selectionArgs);
                     //pass the id to main activity
                     Intent intent = new Intent();

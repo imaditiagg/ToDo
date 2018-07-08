@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public static final int EDIT_RESULT_CODE=2;
     public static final int EDIT_REQUEST_CODE=2;
 
+   static String deleted_title="",deleted_desc="",deleted_date="",deleted_cat="",deleted_time="";
+
     FloatingActionButton fab;
 
 
@@ -103,14 +105,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             displayall();
 
         }
-            //delete from item_description activity
+        //delete from item_description activity
             else if(resultCode==ItemDescription.DELETE_RESULT_CODE){
             displayall();
             Bundle b = data.getExtras();
             long id = b.getLong(MainActivity.ID);
-            //cancel alarm also
+
             Snackbar.make(fab, "Item Deleted", Snackbar.LENGTH_LONG)
-                    .setAction("Undo", null).show();
+                    .setAction("Undo", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            undo(); //undo fn
+                        }
+                    }).show();
+            //cancel alarm also
            // Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             Intent intent1 = new Intent(this,AlarmReceiver.class);
@@ -136,13 +144,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(intent);
 
         }
-     /*   else if(id == R.id.newItem)
-        {
-            //go to Add_item_Activity
-            Intent intent =  new Intent(this,Add_item_Activity.class);
-            intent.putExtra("Request_Code",ADD_REQUEST_CODE);
-            startActivityForResult(intent,ADD_REQUEST_CODE);
-        }*/
         else if(id == R.id.titleSort){
             sortdisplay(Contract.Item.COL_TITLE);
         }
@@ -227,13 +228,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 long id = item.getId();
                 String[] selectionArgs = {id + ""};
+                Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,Contract.Item.COL_ID + " = ? "
+                        ,selectionArgs,null,null,null);
+                while (cursor.moveToNext()) {
+                    deleted_title = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TITLE));
+                    deleted_desc = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DESC));
+                    deleted_date = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DATE));
+                    deleted_time = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
+                    deleted_cat = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
+                }
 
                 database.delete(Contract.Item.TABLE_NAME,Contract.Item.COL_ID + " = ?",selectionArgs);
 
                     items.remove(position);
                     adapter.notifyDataSetChanged(); //notify the adapter
                     Snackbar.make(fab, "Item Deleted", Snackbar.LENGTH_LONG)
-                        .setAction("Undo", null).show();
+                        .setAction("Undo", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                undo();
+                            }
+                        }).show();
 
                 //cancel alarm also
               // Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
@@ -340,6 +355,55 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         adapter.notifyDataSetChanged();
 
         cursor.close();
+    }
+
+    public void undo(){
+        Items item = new Items(deleted_title, deleted_desc, deleted_date, deleted_time, deleted_cat);
+        //store data in dB and notify adapter
+        ItemOpenHelper openHelper = ItemOpenHelper.getInstance(getApplicationContext());
+        SQLiteDatabase database = openHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Contract.Item.COL_TITLE, item.getTitle());
+        contentValues.put(Contract.Item.COL_DESC, item.getDescription());
+        contentValues.put(Contract.Item.COL_DATE, item.getDate());
+        contentValues.put(Contract.Item.COL_TIME, item.getTime());
+        contentValues.put(Contract.Item.COL_CATEGORY, item.getCategory());
+
+        long id = database.insert(Contract.Item.TABLE_NAME, null, contentValues);
+        item.setId(id);
+        items.add(item);
+        adapter.notifyDataSetChanged();
+
+        //setAlarm again
+
+        Bundle b2 = new Bundle();
+        b2.putLong(ID,id);
+        //Set alarm for that date and time
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent intent1 = new Intent(this,AlarmReceiver.class);
+        intent1.putExtras(b2);
+        PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)id,intent1,0);
+        setAlarm(item.getDate(),item.getTime(),alarmManager,pendingIntent);
+
+    }
+
+    public void setAlarm(String d,String t, AlarmManager manager,PendingIntent pendingIntent){
+
+
+        String[] splitString1 = d.split("-");
+        int year = Integer.parseInt(splitString1[2]);
+        int month = Integer.parseInt(splitString1[1]);
+        int day = Integer.parseInt(splitString1[0]);
+
+        String[] splitString2 = t.split(":");
+        int hour = Integer.parseInt(splitString2[0]);
+        int minute = Integer.parseInt(splitString2[1]);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year,month-1,day,hour,minute-1);
+
+        long alarm_time = calendar.getTimeInMillis();
+        manager.set(AlarmManager.RTC_WAKEUP,alarm_time,pendingIntent);
+
     }
 
 
