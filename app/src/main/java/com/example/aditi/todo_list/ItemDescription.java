@@ -32,7 +32,7 @@ public class ItemDescription extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_description);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
 
 
@@ -111,6 +111,7 @@ public class ItemDescription extends AppCompatActivity {
                     }
 
                     database.delete(Contract.Item.TABLE_NAME,Contract.Item.COL_ID + " = ?",selectionArgs);
+                    cursor.close();
                     //pass the id to main activity
                     Intent intent = new Intent();
                     intent.putExtras(b);

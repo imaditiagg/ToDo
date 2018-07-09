@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -47,22 +49,31 @@ public class AlarmReceiver extends BroadcastReceiver {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                     NotificationChannel channel = new NotificationChannel("mychannelid","Notes Channel",NotificationManager.IMPORTANCE_HIGH);
                     manager.createNotificationChannel(channel);
-                    channel.setShowBadge(true);
+                    channel.setShowBadge(true); //to show badge
+
 
                 }
 
-                String GROUP_KEY = "com.android.example.TODO_ITEM";
+                String GROUP_KEY = "TODO_ITEM_NOTIFICATION";
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"mychannelid");
 
                 builder.setContentTitle("REMINDER");
                 builder.setContentText(title);
-                builder.setSmallIcon(R.drawable.todo);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    builder.setSmallIcon(R.drawable.todo);
+                    builder.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                }
+                else{
+                    builder.setSmallIcon(R.drawable.todo);
 
+                }
+                builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.todo));
                 builder.setGroup(GROUP_KEY); //Group notifications
+                builder.setGroupSummary(true);
                 builder.setAutoCancel(true); //remove the notification when user taps it
                 builder.setStyle(new NotificationCompat.BigTextStyle().bigText(title)); //Expandable notification
 
-                builder.setPriority(Notification.PRIORITY_MAX); //Heads up notification
+                 //Heads up notification
                 if (Build.VERSION.SDK_INT >= 21) builder.setVibrate(new long[]{250, 250, 250, 250});
 
 
@@ -76,8 +87,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 PendingIntent pendingIntent3 = PendingIntent.getActivity(context, (int)id ,intent3,PendingIntent.FLAG_UPDATE_CURRENT);
                 builder.addAction(R.drawable.todo,"Edit",pendingIntent3); //add action
 
+
                 Notification notification = builder.build();
-                manager.notify(1,notification);
+                manager.notify((int)id,notification);
 
             }
 

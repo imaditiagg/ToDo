@@ -52,17 +52,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab =  findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 //go to Add_item_Activity
                 Intent intent =  new Intent(MainActivity.this,Add_item_Activity.class);
-            //    intent.putExtra("Request_Code",ADD_REQUEST_CODE);
                 startActivity(intent);
 
             }
@@ -249,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 undo();
                             }
                         }).show();
+                    cursor.close();
 
                 //cancel alarm also
               // Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
