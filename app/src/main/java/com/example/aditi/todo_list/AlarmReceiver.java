@@ -30,7 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         //Alarm
         try{
             if(bundle!=null){
-                Toast.makeText(context,"Alarm",Toast.LENGTH_LONG).show();
+              //  Toast.makeText(context,"Alarm",Toast.LENGTH_LONG).show();
                 String title="",description="";
 
                 long id = bundle.getLong(MainActivity.ID);
@@ -60,14 +60,14 @@ public class AlarmReceiver extends BroadcastReceiver {
                 builder.setContentTitle("REMINDER");
                 builder.setContentText(title);
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                    builder.setSmallIcon(R.drawable.todo);
+                    builder.setSmallIcon(R.drawable.todoicon);
                     builder.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
                 }
                 else{
-                    builder.setSmallIcon(R.drawable.todo);
+                    builder.setSmallIcon(R.drawable.todoicon);
 
                 }
-                builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.todo));
+                builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.todoicon));
                 builder.setGroup(GROUP_KEY); //Group notifications
                 builder.setGroupSummary(true);
                 builder.setAutoCancel(true); //remove the notification when user taps it
@@ -85,7 +85,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Intent intent3 = new Intent(context,Edit_Activity.class);
                 intent3.putExtras(bundle);
                 PendingIntent pendingIntent3 = PendingIntent.getActivity(context, (int)id ,intent3,PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.addAction(R.drawable.todo,"Edit",pendingIntent3); //add action
+                builder.addAction(R.drawable.todoicon,"Edit",pendingIntent3); //add action
 
 
                 Notification notification = builder.build();

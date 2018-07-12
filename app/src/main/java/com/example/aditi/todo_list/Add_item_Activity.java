@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -49,14 +50,34 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
     public static final String CATEGORY = "category";
     public static final String ID="id";
     Intent intent;
+    FloatingActionButton fab;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item_);
+        fab=(FloatingActionButton) findViewById(R.id.save);
+        fab.setImageResource(R.drawable.whitetick);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveItem(view);
+            }
+        });
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        toolbar.setNavigationIcon(R.drawable.whiteback);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(View view) {
+                                                     finish();
+                                                 }
+                                             }
+
+        );
 
         editText1 = findViewById(R.id.titleEdittext);
         editText2 = findViewById(R.id.descripEditText);
@@ -110,14 +131,21 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
     public void setDate(View view) {
 
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,R.style.DialogTheme,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
+                        String day;
+                        day=String .valueOf(dayOfMonth);
+                        if(dayOfMonth<10){
 
-                        dateTextView.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                            day="0"+day;
+                        }
+
+
+                        dateTextView.setText(day + "-" + (monthOfYear + 1) + "-" + year);
 
                     }
                 }, year, month, day);
@@ -128,12 +156,13 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
 
 
         // Launch Time Picker Dialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,R.style.DialogTheme,
                 new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay,
                                           int minute) {
+
 
                         timeTextView.setText(hourOfDay + ":" + minute);
                     }

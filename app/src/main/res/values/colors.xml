@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="skyblue1">#0096cc</color>
     <color name="skyblue2">#005e80</color>
+    <color name="red">#b30000</color>
+    <color name="darkRed">#990000</color>
+    <color name="lightRed">#cc0000</color>
 </resources>

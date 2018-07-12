@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -9,30 +10,37 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:theme="@style/AppTheme.AppBarOverlay" />
+        android:theme="@style/AppTheme.AppBarOverlay" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:text="New Task"
+            android:textColor="#ffffff"
+            />
+    </android.support.v7.widget.Toolbar>
+
+
+
 
     <TextView
+        android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add new item"
-        android:textStyle="bold"
-        android:textSize="25dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"/>
-    <TextView
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginRight="20dp"
+        android:textSize="15dp"
+        android:textColor="#000000"
         android:text="Choose Category"/>
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"/>
+        />
 
 
 
@@ -42,6 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="15dp"
+        android:textStyle="bold"
         android:hint="Enter Title" />
 
     <EditText
@@ -96,14 +105,17 @@
 
     </LinearLayout>
 
-    <Button
-        android:text="Save"
-        android:textStyle="bold"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center_horizontal"
-        android:onClick="saveItem"
-        android:layout_width="120dp"
-        android:layout_height="60dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/save"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="70dp"
+        android:layout_gravity="end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="#4dc3ff"
+
+        />
 
 
 

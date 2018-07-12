@@ -4,15 +4,17 @@
   <!--  <item android:title="Reset" android:id="@+id/newItem"
         android:icon="@drawable/images"
         app:showAsAction="always|withText" />-->
-    <item android:id="@+id/setting" android:title="Settings"/>
+
 
     <item android:id="@+id/sortitem"
         android:title="Sort By">
         <menu></menu>
     </item>
     <item android:id="@+id/displayitem"
-        android:title="Show Only">
+        android:title="View">
         <menu></menu>
     </item>
+    <item android:id="@+id/setting" android:title="Settings"/>
+    <item android:id="@+id/feedback" android:title="Feedback"/>
 
 </menu>

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         public void onClick(View view) {
                             undo(); //undo fn
                         }
-                    }).show();
+                    }).setActionTextColor(getResources().getColor(R.color.skyblue1)).show();
             //cancel alarm also
            // Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -143,6 +144,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(intent);
 
         }
+        else if(id ==R.id.feedback){
+            Intent mail_intent = new Intent();
+            mail_intent.setAction(Intent.ACTION_SENDTO);
+
+            Uri uri = Uri.parse("mailto:aggarwal.aditi97@gmail.com");
+            mail_intent.setData(uri);
+            startActivity(mail_intent);
+        }
         else if(id == R.id.titleSort){
             sortdisplay(Contract.Item.COL_TITLE);
         }
@@ -155,6 +164,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else if (id == R.id.categorySort){
             sortdisplay(Contract.Item.COL_CATEGORY);
+        }
+        else if(id==R.id.all){
+            displayall();
         }
 
         else if (id == R.id.work){
@@ -247,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                             public void onClick(View view) {
                                 undo();
                             }
-                        }).show();
+                        }).setActionTextColor(getResources().getColor(R.color.skyblue1)).show();
                     cursor.close();
 
                 //cancel alarm also

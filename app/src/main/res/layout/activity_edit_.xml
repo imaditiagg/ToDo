@@ -5,35 +5,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar3"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/AppTheme.AppBarOverlay"
-         />
+         >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit item details"
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:text="Edit Details"
+            android:textColor="#ffffff"
+            />
+    </android.support.v7.widget.Toolbar>
+
+
 
 
     <EditText
         android:id="@+id/titleEdittext"
         android:layout_width="match_parent"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:layout_height="80dp"
+        android:textStyle="bold"
         android:hint="Enter Title"/>
 
     <EditText
         android:id="@+id/descripEditText"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginBottom="30dp"
         android:layout_height="80dp"
         android:hint="Enter Description"/>
@@ -83,14 +88,16 @@
 
     </LinearLayout>
 
-    <Button
-        android:text="Save"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"
-        android:onClick="saveEditItem"
-        android:layout_width="120dp"
-        android:layout_height="60dp" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/saveEdit"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="#4dc3ff"/>
+
+
 
 
 

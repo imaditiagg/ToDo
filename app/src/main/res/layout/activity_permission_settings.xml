@@ -6,34 +6,46 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".PermissionSettings">
-    <TextView
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Permission Settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarPermission"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:text="Settings"
+            android:textColor="#ffffff"
+            />
+    </android.support.v7.widget.Toolbar>
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
 
-    <TextView
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="50dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TODO from SMS"/>
-
-        <CheckBox android:id="@+id/checkbox"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="50dp"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:text="ToDo from SMS"
+            android:textSize="20dp"
+            android:textColor="#000000"/>
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="140dp"
+            android:layout_marginTop="50dp"
+            android:onClick="onCheckboxClicked" />
 
 
     </LinearLayout>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import static com.example.aditi.todo_list.MainActivity.ID;
+import static java.security.AccessController.getContext;
 
 public class ItemDescription extends AppCompatActivity {
     TextView t1,t2,t3,t4,t5;
@@ -27,13 +30,24 @@ public class ItemDescription extends AppCompatActivity {
     Bundle b;
     long id;
     public static final int DELETE_RESULT_CODE= 11011;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_description);
-        Toolbar toolbar = findViewById(R.id.toolbar2);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarDesc);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationIcon(R.drawable.whiteback);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
 
 
         t1 =findViewById(R.id.textView1);
@@ -68,6 +82,18 @@ public class ItemDescription extends AppCompatActivity {
         t4.setText(time);
         t5.setText(category);
 
+        fab=(FloatingActionButton) findViewById(R.id.editFab);
+        fab.setImageResource(R.drawable.pencil);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //go to a new activity for edit the item
+                Intent intent = new Intent(ItemDescription.this,Edit_Activity.class);
+                intent.putExtras(b); //pass the bundle to Edit_Activity
+                startActivityForResult(intent,MainActivity.EDIT_REQUEST_CODE);
+            }
+        });
+
 
     }
 
@@ -81,12 +107,7 @@ public class ItemDescription extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int menu_id = item.getItemId();
-        if(menu_id == R.id.edit){
-            //go to a new activity for edit the item
-            Intent intent = new Intent(this,Edit_Activity.class);
-            intent.putExtras(b); //pass the bundle to Edit_Activity
-            startActivityForResult(intent,MainActivity.EDIT_REQUEST_CODE);
-        }
+
         if(menu_id == R.id.delete){
             //delete
             AlertDialog.Builder builder =new AlertDialog.Builder(this);
