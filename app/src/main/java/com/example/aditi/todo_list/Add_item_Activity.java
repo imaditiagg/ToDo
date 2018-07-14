@@ -33,7 +33,7 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
 
     EditText editText1, editText2;
     Spinner spinner;
-    TextView dateTextView, timeTextView;
+    EditText dateTextView, timeTextView;
     Button setDateButton, setTimeButton;
     String title = "";
     String desc = "";

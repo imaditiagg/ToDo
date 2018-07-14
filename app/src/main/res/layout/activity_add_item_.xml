@@ -65,18 +65,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <Button
+        android:layout_marginTop="5dp"
         android:id="@+id/setdateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:background="@drawable/date"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:onClick="setDate"
-        android:text="Set Date" />
+         />
 
-    <TextView
-        android:layout_marginLeft="25dp"
-        android:textSize="25dp"
+    <EditText
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="29dp"
+        android:textSize="22dp"
+        android:hint="Set Date"
+        android:onClick="setDate"
         android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        android:layout_width="160dp"
         android:layout_height="wrap_content" />
 
 
@@ -87,19 +93,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <Button
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/setTimeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:onClick="setTime"
-            android:text="Set Time" />
+            android:background="@drawable/clock"
+            />
 
-        <TextView
+        <EditText
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="25dp"
-            android:textSize="25dp"
+            android:textSize="22dp"
             android:id="@+id/timeTextView"
-            android:layout_width="wrap_content"
+            android:hint="Set time"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:onClick="setTime"
+            android:layout_width="160dp"
             android:layout_height="wrap_content" />
 
 

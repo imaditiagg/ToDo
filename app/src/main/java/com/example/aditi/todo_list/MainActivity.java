@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +25,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -43,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public static final String ID = "id";
     public static final int EDIT_RESULT_CODE=2;
     public static final int EDIT_REQUEST_CODE=2;
-
+    FrameLayout rootLayout;
+    RelativeLayout layout;
    static String deleted_title="",deleted_desc="",deleted_date="",deleted_cat="",deleted_time="";
 
     FloatingActionButton fab;
@@ -53,8 +58,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        rootLayout=findViewById(R.id.rootLayout);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         fab =  findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,8 +90,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
         listView.setAdapter(adapter);
-        displayall();
+
         }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        displayall();
+
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) { //for showing menu to add new item
         getMenuInflater().inflate(R.menu.main_menu,menu);
@@ -271,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 intent1.putExtras(b);
                 PendingIntent pendingIntent =  PendingIntent.getBroadcast(MainActivity.this,(int)id,intent1,0);
                 alarmManager.cancel(pendingIntent);
+                checkEmpty(items);
 
             }
         });
@@ -347,6 +363,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void displayall(){
 
         items.clear();
+        if (rootLayout.indexOfChild(layout) > -1) {
+            // Remove initial layout if it's previously added
+            rootLayout.removeView(layout);
+        }
 
         ItemOpenHelper openHelper =ItemOpenHelper.getInstance(getApplicationContext());
         SQLiteDatabase database= openHelper.getReadableDatabase();
@@ -365,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             items.add(item);
         }
         adapter.notifyDataSetChanged();
-
+        checkEmpty(items);
         cursor.close();
     }
 
@@ -383,8 +403,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         long id = database.insert(Contract.Item.TABLE_NAME, null, contentValues);
         item.setId(id);
-        items.add(item);
-        adapter.notifyDataSetChanged();
+      //  items.add(item);
+      //  adapter.notifyDataSetChanged();
+
+        displayall();
 
         //setAlarm again
 
@@ -416,6 +438,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         long alarm_time = calendar.getTimeInMillis();
         manager.set(AlarmManager.RTC_WAKEUP,alarm_time,pendingIntent);
 
+    }
+
+    public void checkEmpty(ArrayList<Items> items){
+        if(items.isEmpty()){
+            LayoutInflater inflater =(LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+            layout = (RelativeLayout) inflater.inflate(R.layout.initial_layout,rootLayout,false);
+            rootLayout.addView(layout);
+
+
+
+
+        }
     }
 
 

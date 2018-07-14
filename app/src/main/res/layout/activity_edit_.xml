@@ -47,20 +47,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/changedateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:onClick="changeDate"
-            android:text="Change Date" />
+            android:layout_marginTop="20dp"
+            android:background="@drawable/date"
+            android:onClick="changeDate" />
 
         <TextView
-            android:layout_marginLeft="25dp"
-            android:textSize="25dp"
             android:id="@+id/dateEditTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="29dp"
+            android:layout_marginTop="4dp"
+            android:onClick="changeDate"
+            android:textSize="25dp" />
 
 
     </LinearLayout>
@@ -72,15 +76,18 @@
         <Button
             android:layout_marginTop="10dp"
             android:id="@+id/changeTimeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:onClick="changeTime"
-            android:text="Change Time" />
+            android:background="@drawable/clock"
+             />
 
         <TextView
             android:layout_marginLeft="25dp"
             android:textSize="25dp"
+            android:layout_marginTop="5dp"
+            android:onClick="changeTime"
             android:id="@+id/timeEditTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
