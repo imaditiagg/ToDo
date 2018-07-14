@@ -3,7 +3,7 @@
     package="com.example.aditi.todo_list">
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -12,25 +12,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ItemDescription" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Add_item_Activity" android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".ItemDescription"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Add_item_Activity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
-                <action android:name="android.intent.action.SENDTO"/>
+                <action android:name="android.intent.action.SENDTO" />
 
                 <data android:mimeType="text/plain" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Edit_Activity"  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Edit_Activity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".MyReceiver"
@@ -41,12 +49,22 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".PermissionSettings" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".PermissionSettings"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+        <receiver
+            android:name=".BootCompleteReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

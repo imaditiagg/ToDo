@@ -37,6 +37,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.example.aditi.todo_list.Add_item_Activity.ID;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener{
 
 
@@ -166,6 +168,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Uri uri = Uri.parse("mailto:aggarwal.aditi97@gmail.com");
             mail_intent.setData(uri);
             startActivity(mail_intent);
+        }
+        else if(id ==R.id.reset){
+
+            ItemOpenHelper openHelper =ItemOpenHelper.getInstance(getApplicationContext());
+            SQLiteDatabase database= openHelper.getReadableDatabase();
+            Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,  null,null,null,null,null);
+            while(cursor.moveToNext()){
+                //Delete all alarms first
+                long item_id = cursor.getLong(cursor.getColumnIndex(Contract.Item.COL_ID));
+                AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
+                Intent intent1 = new Intent(this,AlarmReceiver.class);
+                PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)id ,intent1,0);
+                Bundle b = new Bundle();
+                b.putLong(ID,item_id);
+                intent1.putExtras(b);
+                PendingIntent pendingIntent1 =  PendingIntent.getBroadcast(MainActivity.this,(int)item_id,intent1,0);
+                alarmManager.cancel(pendingIntent1);
+
+
+            }
+            //Delete items from database
+            database.delete(Contract.Item.TABLE_NAME,null,null);
+
+            displayall();
+
+
+
         }
         else if(id == R.id.titleSort){
             sortdisplay(Contract.Item.COL_TITLE);

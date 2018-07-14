@@ -64,6 +64,7 @@
             android:layout_marginLeft="29dp"
             android:layout_marginTop="4dp"
             android:onClick="changeDate"
+            android:textColor="@color/darkGrey"
             android:textSize="25dp" />
 
 
@@ -89,6 +90,7 @@
             android:layout_marginTop="5dp"
             android:onClick="changeTime"
             android:id="@+id/timeEditTextView"
+            android:textColor="@color/darkGrey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

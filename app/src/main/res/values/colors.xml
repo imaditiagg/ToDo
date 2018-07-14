@@ -8,4 +8,5 @@
     <color name="red">#b30000</color>
     <color name="darkRed">#990000</color>
     <color name="lightRed">#cc0000</color>
+    <color name="darkGrey">#4d4d4d</color>
 </resources>

@@ -11,9 +11,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.RenderScript;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -72,8 +76,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 builder.setGroupSummary(true);
                 builder.setAutoCancel(true); //remove the notification when user taps it
                 builder.setStyle(new NotificationCompat.BigTextStyle().bigText(title)); //Expandable notification
-
-                 //Heads up notification
+                Uri uriSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);//Set sound
+                builder.setSound(uriSound);
                 if (Build.VERSION.SDK_INT >= 21) builder.setVibrate(new long[]{250, 250, 250, 250});
 
 

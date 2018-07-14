@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-  <!--  <item android:title="Reset" android:id="@+id/newItem"
-        android:icon="@drawable/images"
-        app:showAsAction="always|withText" />-->
-
-
     <item android:id="@+id/sortitem"
         android:title="Sort By">
         <menu></menu>
@@ -14,7 +9,8 @@
         android:title="View">
         <menu></menu>
     </item>
-    <item android:id="@+id/setting" android:title="Settings"/>
+    <item android:id="@+id/reset"    android:title="Reset Data"/>
+    <item android:id="@+id/setting"  android:title="Settings"/>
     <item android:id="@+id/feedback" android:title="Feedback"/>
 
 </menu>

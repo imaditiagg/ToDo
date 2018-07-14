@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/category"
+        android:textColor="@color/darkGrey"
        />
 
         <Button
@@ -26,6 +27,7 @@
 
     <TextView
         android:id="@+id/title"
+        android:textColor="#000000"
         android:layout_width="match_parent"
         android:textStyle="bold"
         android:textSize="25dp"
@@ -35,16 +37,19 @@
         android:textSize="15dp"
         android:layout_marginTop="10dp"
         android:id="@+id/description"
+        android:textColor="@color/darkGrey"
         android:layout_width="match_parent"
         android:layout_height="20dp" />
     <TextView
         android:layout_gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/darkGrey"
         android:id="@+id/date"/>
     <TextView
         android:layout_gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/darkGrey"
         android:id="@+id/time"/>
 </LinearLayout>

@@ -82,7 +82,7 @@
         android:id="@+id/dateTextView"
         android:focusableInTouchMode="false"
         android:focusable="false"
-        android:layout_width="160dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content" />
 
 
@@ -110,7 +110,7 @@
             android:focusableInTouchMode="false"
             android:focusable="false"
             android:onClick="setTime"
-            android:layout_width="160dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content" />
 
 
