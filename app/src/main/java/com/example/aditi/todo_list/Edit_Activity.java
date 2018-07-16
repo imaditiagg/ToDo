@@ -199,12 +199,15 @@ public class Edit_Activity extends AppCompatActivity {
             PendingIntent pendingIntent1 = PendingIntent.getBroadcast(this, (int) id, intent1, 0);
             alarmManager.cancel(pendingIntent1);//cancel already set alarm
 
+
             Intent intent2 = new Intent(this, AlarmReceiver.class);
             intent2.putExtras(b2);
             PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this, (int) id, intent2, 0);
             //set new alarm
-            setAlarm(item.getDate(), item.getTime(), alarmManager, pendingIntent2);
-        }
+
+                setAlarm(item.getDate(), item.getTime(), alarmManager, pendingIntent2);
+            }
+
 
     }
 

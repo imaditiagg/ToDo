@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         getMenuInflater().inflate(R.menu.main_menu,menu);
         // Find the menuItem to add your SubMenu
         MenuItem myMenuItem = menu.findItem(R.id.sortitem);
+
         getMenuInflater().inflate(R.menu.sort_menu, myMenuItem.getSubMenu());
         MenuItem mymenu =menu.findItem(R.id.displayitem);
         getMenuInflater().inflate(R.menu.display_menu,mymenu.getSubMenu());
@@ -439,14 +440,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //setAlarm again
 
-        Bundle b2 = new Bundle();
-        b2.putLong(ID,id);
-        //Set alarm for that date and time
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent intent1 = new Intent(this,AlarmReceiver.class);
-        intent1.putExtras(b2);
-        PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)id,intent1,0);
-        setAlarm(item.getDate(),item.getTime(),alarmManager,pendingIntent);
+            Bundle b2 = new Bundle();
+            b2.putLong(ID, id);
+            //Set alarm for that date and time
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent1 = new Intent(this, AlarmReceiver.class);
+            intent1.putExtras(b2);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) id, intent1, 0);
+            setAlarm(item.getDate(), item.getTime(), alarmManager, pendingIntent);
+
 
     }
 

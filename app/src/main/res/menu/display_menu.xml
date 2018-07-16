@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/all" android:title="All"/>
-    <item android:id="@+id/work" android:title="Work"/>
-    <item android:id="@+id/home" android:title="Home"/>
-    <item android:id="@+id/personal" android:title="Personal"/>
-    <item android:id="@+id/college" android:title="College"/>
-    <item android:id="@+id/other" android:title="Other"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/all" android:title="All"  android:icon="@drawable/checklist" app:showAsAction="always|withText"/>
+    <item android:id="@+id/work" android:title="Work" android:icon="@drawable/work2" app:showAsAction="always|withText"/>
+    <item android:id="@+id/home" android:title="Home" android:icon="@drawable/home" app:showAsAction="always|withText" />
+    <item android:id="@+id/personal" android:title="Personal" android:icon="@drawable/user" app:showAsAction="always|withText"/>
+    <item android:id="@+id/college" android:title="College" android:icon="@drawable/hat2" app:showAsAction="always|withText"/>
+    <item android:id="@+id/other" android:title="Other" android:icon="@drawable/cart" app:showAsAction="always|withText"/>
 </menu>

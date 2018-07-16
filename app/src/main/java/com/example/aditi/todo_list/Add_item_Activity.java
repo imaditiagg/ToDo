@@ -225,11 +225,13 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
         Bundle b2 = new Bundle();
         b2.putLong(ID,id);
         //Set alarm for that date and time
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent intent1 = new Intent(this,AlarmReceiver.class);
-        intent1.putExtras(b2);
-        PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)id,intent1,0);
-        setAlarm(item.getDate(),item.getTime(),alarmManager,pendingIntent);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            Intent intent1 = new Intent(this, AlarmReceiver.class);
+            intent1.putExtras(b2);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, (int) id, intent1, 0);
+            setAlarm(item.getDate(), item.getTime(), alarmManager, pendingIntent);
+
 
     }
 
@@ -249,6 +251,7 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
 
         long alarm_time = calendar.getTimeInMillis();
         manager.set(AlarmManager.RTC_WAKEUP,alarm_time,pendingIntent);
+
 
     }
 }
