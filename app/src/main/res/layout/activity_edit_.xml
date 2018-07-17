@@ -37,8 +37,8 @@
             android:text="Task Completed ? " />
         <CheckBox
             android:id="@+id/editComplete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,8 +49,8 @@
 
         <Button
             android:id="@+id/impButton"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginLeft="5dp"
             android:onClick="changeMarkImp" />
     </LinearLayout>
@@ -128,7 +128,7 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/saveEdit"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:layout_gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

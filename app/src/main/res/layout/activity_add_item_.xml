@@ -37,9 +37,9 @@
           android:id="@+id/impButton"
           android:layout_marginLeft="5dp"
           android:background="@drawable/star"
-          android:layout_width="35dp"
+          android:layout_width="32dp"
           android:onClick="markImp"
-          android:layout_height="35dp" />
+          android:layout_height="32dp" />
 </LinearLayout>
 
     <TextView

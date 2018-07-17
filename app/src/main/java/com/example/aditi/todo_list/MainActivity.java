@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }).setActionTextColor(getResources().getColor(R.color.skyblue1)).show();
             //cancel alarm also
-            Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
+            // Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             Intent intent1 = new Intent(this,AlarmReceiver.class);
             Bundle b2 = new Bundle();
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         else if(id ==R.id.reset){
             AlertDialog.Builder builder =new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("Reset");
+            builder.setTitle("Reset Data ");
             builder.setMessage("Do you really want to clear all data ? ");
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
@@ -562,6 +562,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void checkEmpty(ArrayList<Items> items){
         if(items.isEmpty()){
+            //show initial layout
             LayoutInflater inflater =(LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
             layout = (RelativeLayout) inflater.inflate(R.layout.initial_layout,rootLayout,false);
             rootLayout.addView(layout);
