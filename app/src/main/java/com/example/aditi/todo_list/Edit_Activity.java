@@ -14,18 +14,24 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
 public class Edit_Activity extends AppCompatActivity {
     EditText e1,e2;
     TextView t1,t2;
+    Button impButton;
+    CheckBox completeCheckBox;
     Bundle b;
     String title,date,description,time,category;
+    int important,completed;
     int year,month,day,hour,minute;
 
     public static final String ID="id";
@@ -63,6 +69,9 @@ public class Edit_Activity extends AppCompatActivity {
         e2= findViewById(R.id.descripEditText);
         t1 =findViewById(R.id.dateEditTextView);
         t2=findViewById(R.id.timeEditTextView);
+        impButton=findViewById(R.id.impButton);
+        completeCheckBox=findViewById(R.id.editComplete);
+
         //obtain id from bundle and hence display data from database
         Intent intent = getIntent();
         b = intent.getExtras();
@@ -79,7 +88,11 @@ public class Edit_Activity extends AppCompatActivity {
             date = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DATE));
             time = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
             category = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
+            important=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_IMP));
+            completed=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_COMPLETED));
+
         }
+
         e1.setText(title);
         e2.setText(description);
         t1.setText(date);
@@ -87,6 +100,39 @@ public class Edit_Activity extends AppCompatActivity {
 
         e1.setSelection(e1.getText().length());
         e2.setSelection(e2.getText().length());
+
+        if(important==1){
+            impButton.setBackground(getResources().getDrawable(R.drawable.colorstar2));
+        }
+        else{
+            impButton.setBackground(getResources().getDrawable(R.drawable.star));
+
+        }
+        if(completed==1){
+            completeCheckBox.setChecked(true);
+        }
+        else{
+            completeCheckBox.setChecked(false);
+        }
+
+
+        completeCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(completed==1){
+                    completed=0;
+                    completeCheckBox.setChecked(false);
+                    Toast.makeText(Edit_Activity.this,"Task Not Completed",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    completed=1;
+                    completeCheckBox.setChecked(true);
+                    Toast.makeText(Edit_Activity.this,"Task Completed",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
 
     }
 
@@ -174,6 +220,8 @@ public class Edit_Activity extends AppCompatActivity {
     //update in DB
     public void update(String title1, String desc1, String date1, String time1, String category1) {
         Items item = new Items(title1,desc1,date1,time1,category1);
+        item.setImportant(important);
+        item.setCompleted(completed);
 
         ItemOpenHelper openHelper1 = ItemOpenHelper.getInstance(getApplicationContext());
         SQLiteDatabase database1=  openHelper1.getWritableDatabase();
@@ -184,6 +232,8 @@ public class Edit_Activity extends AppCompatActivity {
         contentValues.put(Contract.Item.COL_DATE, item.getDate());
         contentValues.put(Contract.Item.COL_TIME, item.getTime());
         contentValues.put(Contract.Item.COL_CATEGORY, item.getCategory());
+        contentValues.put(Contract.Item.COL_IMP,item.isImportant());
+        contentValues.put(Contract.Item.COL_COMPLETED,item.isCompleted());
 
         String[] selectionArgs = {id + ""};
         database1.update(Contract.Item.TABLE_NAME,contentValues,Contract.Item.COL_ID + " = ?",selectionArgs);
@@ -230,6 +280,18 @@ public class Edit_Activity extends AppCompatActivity {
         manager.set(AlarmManager.RTC_WAKEUP,alarm_time,pendingIntent);
 
     }
+
+    public void changeMarkImp(View view){
+        if(important==1){
+            important=0;
+            impButton.setBackground(getResources().getDrawable(R.drawable.star));
+        }
+        else{
+            important=1;
+            impButton.setBackground(getResources().getDrawable(R.drawable.colorstar2));
+        }
+    }
+
 
 
 

@@ -10,5 +10,8 @@ public class Contract {
         public static final String COL_DATE="date";
         public static final String COL_TIME ="time";
         public static final String COL_CATEGORY ="category";
+        public static final String COL_IMP ="important";
+        public static final String COL_COMPLETED="completed";
+
     }
 }

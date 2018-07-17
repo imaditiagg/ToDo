@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +27,9 @@ import static java.security.AccessController.getContext;
 
 public class ItemDescription extends AppCompatActivity {
     TextView t1,t2,t3,t4,t5;
+    Button button;
     String title,description,date,time,category;
+    int important;
     Bundle b;
     long id;
     public static final int DELETE_RESULT_CODE= 11011;
@@ -49,7 +52,8 @@ public class ItemDescription extends AppCompatActivity {
 
 
 
-
+        button=findViewById(R.id.impShow);
+        button.setEnabled(false);
         t1 =findViewById(R.id.textView1);
         t2=findViewById(R.id.textView2);
         t3=findViewById(R.id.textView3);
@@ -75,12 +79,20 @@ public class ItemDescription extends AppCompatActivity {
             date = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DATE));
             time = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
             category = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
+            important=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_IMP));
         }
         t1.setText(title);
         t2.setText(description);
         t3.setText(date);
         t4.setText(time);
         t5.setText(category);
+        if(important==1){
+            button.setVisibility(View.VISIBLE);
+            button.setBackground(getResources().getDrawable(R.drawable.colorstar2));
+        }
+        else{
+            button.setVisibility(View.GONE);
+        }
 
         fab=(FloatingActionButton) findViewById(R.id.editFab);
         fab.setImageResource(R.drawable.pencil);

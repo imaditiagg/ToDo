@@ -25,7 +25,35 @@
     </android.support.v7.widget.Toolbar>
 
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:text="Task Completed ? " />
+        <CheckBox
+            android:id="@+id/editComplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:text="Mark As Important"
+            android:textColor="#000000" />
+
+        <Button
+            android:id="@+id/impButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:onClick="changeMarkImp" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/titleEdittext"
@@ -100,7 +128,7 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/saveEdit"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:layout_gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

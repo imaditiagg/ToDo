@@ -39,18 +39,16 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
     String desc = "";
     String date = "";
     String time = "";
+    int important =0;
     String spinnner_item = "";
 
     private Calendar calendar;
     private int year, month, day, hour, minute;
-    public static final String TITLE = "title";
-    public static final String DESCRIPTION = "description";
-    public static final String DATE = "date";
-    public static final String TIME = "time";
-    public static final String CATEGORY = "category";
+
     public static final String ID="id";
     Intent intent;
     FloatingActionButton fab;
+    Items item;
 
 
     @Override
@@ -183,7 +181,7 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
             return;
         }
 
-        add(title, desc, date, time, spinnner_item); //add to database
+        add(title, desc, date, time, spinnner_item,important); //add to database
 
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
@@ -206,9 +204,10 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
 
     //addtoDB
 
-    public void add(String title, String desc, String date, String time, String category) {
+    public void add(String title, String desc, String date, String time, String category,int important) {
 
-        Items item = new Items(title, desc, date, time, category);
+        item = new Items(title, desc, date, time, category);
+        item.setImportant(important);
 
         ItemOpenHelper openHelper = ItemOpenHelper.getInstance(getApplicationContext());
         SQLiteDatabase database = openHelper.getWritableDatabase();
@@ -218,6 +217,8 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
         contentValues.put(Contract.Item.COL_DATE, item.getDate());
         contentValues.put(Contract.Item.COL_TIME, item.getTime());
         contentValues.put(Contract.Item.COL_CATEGORY, item.getCategory());
+        contentValues.put(Contract.Item.COL_IMP,item.isImportant());
+        contentValues.put(Contract.Item.COL_COMPLETED,item.isCompleted());
 
         long id = database.insert(Contract.Item.TABLE_NAME, null, contentValues);
 
@@ -253,6 +254,19 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
         manager.set(AlarmManager.RTC_WAKEUP,alarm_time,pendingIntent);
 
 
+    }
+
+    public void markImp(View view){
+        if(important==0) {
+            view.setBackground(getResources().getDrawable(R.drawable.colorstar2));
+            important=1;
+        }
+        else {
+            view.setBackground(getResources().getDrawable(R.drawable.star));
+            important=0;
+            }
+
+        //Toast.makeText(this,important+"",Toast.LENGTH_LONG).show();
     }
 }
 

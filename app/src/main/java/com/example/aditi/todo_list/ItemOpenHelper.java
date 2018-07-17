@@ -28,7 +28,9 @@ public class ItemOpenHelper extends SQLiteOpenHelper {
                 Contract.Item.COL_DESC + " TEXT , " +
                 Contract.Item.COL_DATE + " TEXT, "  +
                 Contract.Item.COL_TIME  + " TEXT, " +
-                Contract.Item.COL_CATEGORY + " TEXT ) " ;
+                Contract.Item.COL_CATEGORY + " TEXT, " +
+                Contract.Item.COL_IMP + " Boolean, " +
+                Contract.Item.COL_COMPLETED + " Boolean )";
 
         sqLiteDatabase.execSQL(itemquery);
 

@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
     <LinearLayout
         android:layout_marginTop="2dp"
-        android:layout_gravity="end"
+
         android:layout_width="wrap_content"
         android:orientation="horizontal"
         android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/completedCheckbox"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:layout_width="wrap_content" />
     <TextView
+        android:layout_marginLeft="255dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/category"
@@ -24,14 +32,26 @@
             android:background="@drawable/garbage"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/impButtonShow"
+            android:background="@drawable/colorstar2"
+            android:focusable="false"
+            android:layout_width="23dp"
+            android:layout_height="23dp" />
+
 
     <TextView
         android:id="@+id/title"
         android:textColor="#000000"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:textStyle="bold"
+        android:layout_marginLeft="10dp"
         android:textSize="25dp"
         android:layout_height= "33dp"/>
+    </LinearLayout>
 
     <TextView
         android:textSize="15dp"
@@ -40,16 +60,27 @@
         android:textColor="@color/darkGrey"
         android:layout_width="match_parent"
         android:layout_height="20dp" />
-    <TextView
-        android:layout_gravity="end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/darkGrey"
-        android:id="@+id/date"/>
-    <TextView
-        android:layout_gravity="end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/darkGrey"
-        android:id="@+id/time"/>
+
+
+
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="end"
+
+            android:textColor="@color/darkGrey" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+
+            android:textColor="@color/darkGrey" />
+
+
+
 </LinearLayout>

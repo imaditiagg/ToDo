@@ -1,6 +1,7 @@
 package com.example.aditi.todo_list;
 
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class ViewHolder {
@@ -9,5 +10,6 @@ public class ViewHolder {
     TextView date;
     TextView time;
     TextView category;
-    Button deleteButton;
+    Button deleteButton,importantButton;
+    CheckBox completedCheckBox;
 }

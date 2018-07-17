@@ -6,7 +6,9 @@
         android:icon="@drawable/menu"
         app:showAsAction="ifRoom">
 
-        <menu>"
+        <menu>
+            <item android:id="@+id/all" android:title="All Tasks"  />
+            <item android:id="@+id/pending" android:title="Pending Tasks"/>
             <item android:id="@+id/completed" android:title="Completed Tasks"/>
             <item android:id="@+id/important" android:title="Important Tasks"/>
         </menu>
@@ -17,10 +19,11 @@
         <menu></menu>
     </item>
     <item android:id="@+id/displayitem"
-        android:title="View">
+        android:title="View Only">
         <menu></menu>
     </item>
     <item android:id="@+id/reset"    android:title="Reset Data"/>
+    <item android:id="@+id/setSound" android:title="Set Sound"/>
     <item android:id="@+id/setting"  android:title="Settings"/>
     <item android:id="@+id/feedback" android:title="Feedback"/>
 

@@ -2,14 +2,32 @@ package com.example.aditi.todo_list;
 
 public class Items {
     private long id;
-
-
-
     private String title;
     private String description;
     private String date;
     private String time;
     private String category;
+    private int  important=0;
+    private int completed=0;
+
+
+    public void setImportant(int important) {
+        this.important = important;
+    }
+
+    public void setCompleted(int completed) {
+        this.completed = completed;
+    }
+
+    public int isImportant() {
+        return important;
+    }
+
+    public int isCompleted() {
+        return completed;
+    }
+
+
 
 
     public Items(String title, String description, String date, String time, String category) {

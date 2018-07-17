@@ -6,8 +6,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -51,7 +53,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public static final int EDIT_REQUEST_CODE=2;
     FrameLayout rootLayout;
     RelativeLayout layout;
-   static String deleted_title="",deleted_desc="",deleted_date="",deleted_cat="",deleted_time="";
+    static String deleted_title="",deleted_desc="",deleted_date="",deleted_cat="",deleted_time="";
+    static int deleted_imp,deleted_completed;
+    String selectedRingtone;
 
     FloatingActionButton fab;
 
@@ -86,21 +90,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setOnItemLongClickListener(this);
         adapter =new ItemAdaptor(MainActivity.this, items, new ButtonClickListener() {
             @Override
-            public void rowButtonClicked(int position,Items item) {
+            public void rowButtonClicked(int position, Items item) {
 
-                delete(position,item);
+                delete(position, item);
+            }
+        }, new CheckBoxClickListener() {
+            @Override
+            public void checkBoxClicked(Items item,int value) {
+                setComplete(item,value);
             }
         });
         listView.setAdapter(adapter);
+        displayall();
 
         }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        displayall();
-
-    }
 
     public boolean onCreateOptionsMenu(Menu menu) { //for showing menu to add new item
         getMenuInflater().inflate(R.menu.main_menu,menu);
@@ -137,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }).setActionTextColor(getResources().getColor(R.color.skyblue1)).show();
             //cancel alarm also
-           // Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             Intent intent1 = new Intent(this,AlarmReceiver.class);
             Bundle b2 = new Bundle();
@@ -146,7 +150,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             PendingIntent pendingIntent =  PendingIntent.getBroadcast(MainActivity.this,(int)id,intent1,0);
             alarmManager.cancel(pendingIntent);
 
+
             }
+         else if (requestCode == 0000)
+         {
+
+             Uri uri = null;
+             if (data != null) {
+                 uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+             }
+
+             if (uri != null)
+            {
+                this.selectedRingtone = uri.toString();
+                SharedPreferences prefs = getSharedPreferences("sound",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("sound_uri", selectedRingtone);
+                editor.apply();
+            }
+            else
+            {
+                this.selectedRingtone = null;
+            }
+        }
     }
 
 
@@ -171,32 +197,48 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             startActivity(mail_intent);
         }
         else if(id ==R.id.reset){
+            AlertDialog.Builder builder =new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Reset");
+            builder.setMessage("Do you really want to clear all data ? ");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-            ItemOpenHelper openHelper =ItemOpenHelper.getInstance(getApplicationContext());
-            SQLiteDatabase database= openHelper.getReadableDatabase();
-            Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,  null,null,null,null,null);
-            while(cursor.moveToNext()){
-                //Delete all alarms first
-                long item_id = cursor.getLong(cursor.getColumnIndex(Contract.Item.COL_ID));
-                AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
-                Intent intent1 = new Intent(this,AlarmReceiver.class);
-                PendingIntent pendingIntent =  PendingIntent.getBroadcast(this,(int)id ,intent1,0);
-                Bundle b = new Bundle();
-                b.putLong(ID,item_id);
-                intent1.putExtras(b);
-                PendingIntent pendingIntent1 =  PendingIntent.getBroadcast(MainActivity.this,(int)item_id,intent1,0);
-                alarmManager.cancel(pendingIntent1);
+                            ItemOpenHelper openHelper = ItemOpenHelper.getInstance(getApplicationContext());
+                            SQLiteDatabase database= openHelper.getReadableDatabase();
+                            Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,  null,null,null,null,null);
+                            while(cursor.moveToNext()) {
+                                //Delete all alarms first
+                                long item_id = cursor.getLong(cursor.getColumnIndex(Contract.Item.COL_ID));
+                                AlarmManager alarmManager = (AlarmManager) MainActivity.this.getSystemService(ALARM_SERVICE);
+                                Intent intent1 = new Intent(MainActivity.this, AlarmReceiver.class);
+                                Bundle b = new Bundle();
+                                b.putLong(ID, item_id);
+                                intent1.putExtras(b);
+                                PendingIntent pendingIntent1 = PendingIntent.getBroadcast(MainActivity.this, (int) item_id, intent1, 0);
+                                alarmManager.cancel(pendingIntent1);
 
 
+                            }
+                            //Delete items from database
+                            database.delete(Contract.Item.TABLE_NAME,null,null);
+
+                            displayall();
+
+
+                        }
+                    });
+
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //Don't delete
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
             }
-            //Delete items from database
-            database.delete(Contract.Item.TABLE_NAME,null,null);
-
-            displayall();
-
-
-
-        }
         else if(id == R.id.titleSort){
             sortdisplay(Contract.Item.COL_TITLE);
         }
@@ -210,36 +252,62 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         else if (id == R.id.categorySort){
             sortdisplay(Contract.Item.COL_CATEGORY);
         }
+
         else if(id==R.id.all){
             displayall();
         }
 
         else if (id == R.id.work){
             String[] selectionargs ={"Work"};
-            showOnly(selectionargs);
+            showOnly(selectionargs,Contract.Item.COL_CATEGORY);
             }
 
         else if (id == R.id.home){
             String[] selectionargs ={"Home"};
-            showOnly(selectionargs);
+            showOnly(selectionargs,Contract.Item.COL_CATEGORY);
 
         }
         else if (id == R.id.personal){
             String[] selectionargs ={"Personal"};
-            showOnly(selectionargs);
+            showOnly(selectionargs,Contract.Item.COL_CATEGORY);
 
         }
         else if (id == R.id.college){
 
             String[] selectionargs ={"College"};
-            showOnly(selectionargs);
+            showOnly(selectionargs,Contract.Item.COL_CATEGORY);
 
         }
         else if (id == R.id.other){
             String[] selectionargs ={"Other"};
-            showOnly(selectionargs);
+            showOnly(selectionargs,Contract.Item.COL_CATEGORY);
 
             }
+
+        else if(id==R.id.completed){
+            String[] selectionargs={1+""};
+            showOnly(selectionargs,Contract.Item.COL_COMPLETED);
+        }
+        else if(id == R.id.pending){
+            String[] selectionargs={0+""};
+            showOnly(selectionargs,Contract.Item.COL_COMPLETED);
+
+        }
+        else if(id ==R.id.important){
+            String[] selectionargs={1+""};
+            showOnly(selectionargs,Contract.Item.COL_IMP);
+
+        }
+        else if(id==R.id.setSound){
+            SharedPreferences prefs_sound = this.getSharedPreferences("sound",Context.MODE_PRIVATE);
+            String sound = prefs_sound.getString("sound_uri", RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
+            Uri alarmSound = Uri.parse(sound);
+            Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select sound");
+            intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, alarmSound);
+            this.startActivityForResult(intent, 0000);
+        }
 
         return true;
     }
@@ -292,6 +360,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     deleted_date = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DATE));
                     deleted_time = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
                     deleted_cat = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
+                    deleted_imp=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_IMP));
+                    deleted_completed=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_COMPLETED));
                 }
 
                 database.delete(Contract.Item.TABLE_NAME,Contract.Item.COL_ID + " = ?",selectionArgs);
@@ -308,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     cursor.close();
 
                 //cancel alarm also
-              // Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
+               // Toast.makeText(MainActivity.this,"Alarm cancelled",Toast.LENGTH_SHORT).show();
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 Intent intent1 = new Intent(MainActivity.this,AlarmReceiver.class);
                 Bundle b = new Bundle();
@@ -351,10 +421,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             String time =cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
             String category =cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
             long item_id = cursor.getLong(cursor.getColumnIndex(Contract.Item.COL_ID));
+            int important =cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_IMP));
+            int completed=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_COMPLETED));
 
             Items it = new Items(title,description,date,time,category);
             it.setId(item_id);
+            it.setCompleted(completed);
+            it.setImportant(important);
             items.add(it);
+
 
         }
 
@@ -364,11 +439,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void showOnly(String[]  args){
+    public void showOnly(String[]  args,String columnName){
         items.clear();
+        if (rootLayout.indexOfChild(layout) > -1) {
+            // Remove initial layout if it's previously added
+            rootLayout.removeView(layout);
+        }
         ItemOpenHelper openHelper =ItemOpenHelper.getInstance(getApplicationContext());
         SQLiteDatabase database= openHelper.getReadableDatabase();
-        Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,Contract.Item.COL_CATEGORY + " = ? "
+        Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,columnName + " = ? "
                 ,args,null,null,null);
 
 
@@ -379,14 +458,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             String time =cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
             long item_id = cursor.getLong(cursor.getColumnIndex(Contract.Item.COL_ID));
             String category =cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
+            int important =cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_IMP));
+            int completed=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_COMPLETED));
             Items it = new Items(title,description,date,time,category);
             it.setId(item_id);
+            it.setCompleted(completed);
+            it.setImportant(important);
             items.add(it);
 
         }
 
         adapter.notifyDataSetChanged();
-
+        checkEmpty(items);
         cursor.close();
     }
 
@@ -397,7 +480,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Remove initial layout if it's previously added
             rootLayout.removeView(layout);
         }
-
         ItemOpenHelper openHelper =ItemOpenHelper.getInstance(getApplicationContext());
         SQLiteDatabase database= openHelper.getReadableDatabase();
         Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,null
@@ -410,8 +492,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             String time =cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
             String category =cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
             long id = cursor.getLong(cursor.getColumnIndex(Contract.Item.COL_ID));
+            int important = cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_IMP));
+            int completed = cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_COMPLETED));
             Items item = new Items(title,description,date,time,category);
             item.setId(id);
+            item.setImportant(important);
+            item.setCompleted(completed);
             items.add(item);
         }
         adapter.notifyDataSetChanged();
@@ -421,6 +507,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void undo(){
         Items item = new Items(deleted_title, deleted_desc, deleted_date, deleted_time, deleted_cat);
+        item.setImportant(deleted_imp);
+        item.setCompleted(deleted_completed);
+
         //store data in dB and notify adapter
         ItemOpenHelper openHelper = ItemOpenHelper.getInstance(getApplicationContext());
         SQLiteDatabase database = openHelper.getWritableDatabase();
@@ -430,11 +519,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         contentValues.put(Contract.Item.COL_DATE, item.getDate());
         contentValues.put(Contract.Item.COL_TIME, item.getTime());
         contentValues.put(Contract.Item.COL_CATEGORY, item.getCategory());
+        contentValues.put(Contract.Item.COL_IMP,item.isImportant());
+        contentValues.put(Contract.Item.COL_COMPLETED,item.isCompleted());
 
         long id = database.insert(Contract.Item.TABLE_NAME, null, contentValues);
         item.setId(id);
-      //  items.add(item);
-      //  adapter.notifyDataSetChanged();
 
         displayall();
 
@@ -481,6 +570,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         }
+    }
+
+    public void setComplete(Items item,int value){
+        long id = item.getId();
+        ItemOpenHelper openHelper1 = ItemOpenHelper.getInstance(getApplicationContext());
+        SQLiteDatabase database1=  openHelper1.getWritableDatabase();
+        ContentValues contentValues =new ContentValues();
+        contentValues.put(Contract.Item.COL_COMPLETED,value);
+        String[] selectionArgs = {id + ""};
+        database1.update(Contract.Item.TABLE_NAME,contentValues,Contract.Item.COL_ID + " = ?",selectionArgs);
+        displayall();
+
     }
 
 
