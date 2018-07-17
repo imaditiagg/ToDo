@@ -408,6 +408,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void sortdisplay(String orderbyargument){
         items.clear();
+        if (rootLayout.indexOfChild(layout) > -1) {
+            // Remove initial layout if it's previously added
+            rootLayout.removeView(layout);
+        }
         ItemOpenHelper openHelper =ItemOpenHelper.getInstance(getApplicationContext());
         SQLiteDatabase database= openHelper.getReadableDatabase();
         Cursor cursor = database.query(Contract.Item.TABLE_NAME,null,null
