@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -19,7 +20,7 @@ public class BootCompleteReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
-
+        Log.i("BOOT", "Received action: " + intent.getAction());
         //set alarms again after boot completion
         ItemOpenHelper openHelper = ItemOpenHelper.getInstance(context);
         SQLiteDatabase database = openHelper.getReadableDatabase();

@@ -5,9 +5,11 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -172,24 +174,24 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
     public void saveItem(View view) {
 
 
-        title = editText1.getText().toString();
-        desc = editText2.getText().toString();
-        date = dateTextView.getText().toString();
-        time = timeTextView.getText().toString();
-        if (time.equals("") || title.equals("") || desc.equals("") || date.equals("")) {
+            title = editText1.getText().toString();
+            desc = editText2.getText().toString();
+            date = dateTextView.getText().toString();
+            time = timeTextView.getText().toString();
+            if (time.equals("") || title.equals("") || desc.equals("") || date.equals("")) {
             Toast.makeText(this, "Fill all the details", Toast.LENGTH_SHORT).show();
             return;
-        }
+            }
 
-        add(title, desc, date, time, spinnner_item,important); //add to database
+            add(title, desc, date, time, spinnner_item, important); //add to database
 
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             finish();
+            Toast.makeText(this,"Task Added",Toast.LENGTH_SHORT).show();
 
 
-
-    }
+     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -266,7 +268,56 @@ public class Add_item_Activity extends AppCompatActivity  implements AdapterView
             important=0;
             }
 
-        //Toast.makeText(this,important+"",Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onBackPressed() {
+
+        title = editText1.getText().toString().trim();
+        desc = editText2.getText().toString().trim();
+        date = dateTextView.getText().toString();
+        time = timeTextView.getText().toString();
+
+        if(title.isEmpty() && desc.isEmpty() && date.isEmpty() && time.isEmpty())
+        {
+            //if all the fields are empty
+            finish();
+        }
+
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Quit Without Saving");
+            builder.setMessage("Are you sure?");
+
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    Intent intent = new Intent(Add_item_Activity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                }
+
+            });
+
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    dialogInterface.cancel();
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        }
+
+
+    }
+
+
 }
 
