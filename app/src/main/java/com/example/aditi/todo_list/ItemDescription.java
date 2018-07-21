@@ -141,6 +141,8 @@ public class ItemDescription extends AppCompatActivity {
                         MainActivity.deleted_date = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_DATE));
                         MainActivity.deleted_time = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_TIME));
                         MainActivity.deleted_cat = cursor.getString(cursor.getColumnIndex(Contract.Item.COL_CATEGORY));
+                        MainActivity.deleted_completed=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_COMPLETED));
+                        MainActivity.deleted_imp=cursor.getInt(cursor.getColumnIndex(Contract.Item.COL_IMP));
                     }
 
                     database.delete(Contract.Item.TABLE_NAME,Contract.Item.COL_ID + " = ?",selectionArgs);
